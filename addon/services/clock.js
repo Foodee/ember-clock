@@ -1,10 +1,10 @@
 /**
   @module ember-clock
 */
-import { bool } from '@ember/object/computed';
+import { bool } from "@ember/object/computed";
 
-import { run } from '@ember/runloop';
-import Service from '@ember/service';
+import { cancel, later } from "@ember/runloop";
+import Service from "@ember/service";
 
 /**
   ## ClockService
@@ -36,7 +36,6 @@ import Service from '@ember/service';
   @namespace EmberClock
 */
 export default Service.extend({
-
   /**
     @property hour
     @type {Integer}
@@ -49,7 +48,7 @@ export default Service.extend({
   */
   minute: null,
 
-   /**
+  /**
     @property second
     @type {Integer}
   */
@@ -69,7 +68,7 @@ export default Service.extend({
     @readonly
     @private
   */
-  isTicking: bool('nextTick'),
+  isTicking: bool("nextTick"),
 
   /**
     Call `start()`
@@ -96,8 +95,8 @@ export default Service.extend({
     @private
   */
   stop() {
-    run.cancel(this.get('nextTick'));
-    this.set('nextTick', null);
+    cancel(this.get("nextTick"));
+    this.set("nextTick", null);
   },
 
   /**
@@ -110,7 +109,7 @@ export default Service.extend({
     this.setProperties({
       second: now.getSeconds(),
       minute: now.getMinutes(),
-      hour:   now.getHours()
+      hour: now.getHours(),
     });
   },
 
@@ -121,11 +120,11 @@ export default Service.extend({
   */
   tick() {
     this.setTime();
-    if (this.get('disabled')) {
+    if (this.get("disabled")) {
       return;
     }
-    this.set('nextTick', run.later(this, this.tick, 1000));
-	},
+    this.set("nextTick", later(this, this.tick, 1000));
+  },
 
   /**
     call `stop()`
@@ -134,5 +133,5 @@ export default Service.extend({
   */
   willDestroy() {
     this.stop();
-  }
+  },
 });
